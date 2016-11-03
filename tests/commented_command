@@ -1,0 +1,14 @@
+echo hello #world
+ls -a || echo hello world #testing comments on multiple commands
+ps #exit
+echo test # || ls
+#
+mkdir test_directory #create a test directory
+rm -r test_directory #remove the directory
+echo test && echo test2 # echo both statements
+touch file.cpp #testing touch with a file name
+#rm file.cpp #remove the file
+#at file.cpp #testing cat on empty file
+echo mkdir test_dir # echo test
+ls -l #
+exit
