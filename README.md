@@ -19,4 +19,5 @@ connector = || or && or ;
 Note this program can take more than one command on a line and can be separated by connectors. There are no limits to the nuber of commands which can be chained together, and any combination of operators can be handled. 
 
 ## Known Bugs
-1. This program currently does not allow the `cd` command. This will be handled in a future version.
+1. This program currently does not allow the `cd` command. This will be handled in a future version. When the `cd` command is used in a command line, the program will not run.
+2. 
