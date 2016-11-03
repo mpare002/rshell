@@ -4,10 +4,13 @@ using namespace std;
 
 bool Executable::execute()
 {
+	// Declares varaibles needed
 	unsigned i = 0;
 	char *newArgs[10000];
 	char *newInput;
 	char *cmd;
+	
+	// Tokenizes individual commands
 	argument.erase(argument.find_last_not_of(' ') + 1);
 	
 	while(argument.at(i) == ' ')
@@ -57,11 +60,9 @@ bool Executable::execute()
 	//Here is where we implement the system calls
     bool result = true;
     int pid_child;
-    //int status_child unused
     int status;
 
     pid_child = fork();
-    //cout << pid_child << endl;
     if(pid_child == -1)
     {
     	//an error in the fork process
@@ -71,7 +72,7 @@ bool Executable::execute()
     }
     if(pid_child == 0)
     {
-    	//process is the the child
+    	//process is the child
     	int ret = execvp(newArgs[0], newArgs);
     	
 		if(ret == -1)
@@ -97,7 +98,7 @@ bool Executable::execute()
     {
     	delete newInput;
     }
-    
+
     delete cmd;
     return result;
 }
