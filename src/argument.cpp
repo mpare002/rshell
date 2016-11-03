@@ -4,39 +4,17 @@ using namespace std;
 
 bool Executable::execute()
 {
-	//conver argument string to char array
-	/*int white_ = 0;
-	for(unsigned int i = 0; i < argument.size(); ++i)
-	{
-		if (argument.at(i) == ' ')
-		{
-			++white_;
-		}
-	}
-	char** newArr = new char*[white_ + 1];
-
-	stringstream ss(argument);
-	string buff;
-	cout << "HELP" << endl;
-	int i = 0;
-	while(ss >> buff)
-	{      
-		char* temp = (char*)buff.c_str();
-		newArr[i] = temp;
-		++i;
-	}
-
-	newArr[i +1] = NULL;
-	*/
-	int i = 0;
+	unsigned i = 0;
 	char *argv[10000];
 	char *inputC;
 	char *cmd;
 	argument.erase(argument.find_last_not_of(' ') + 1);
+	
 	while(argument.at(i) == ' ')
 	{
 		i++;
 	}
+	
 	if(argument.substr(i, 4) == "exit")
 	{
 		if(i + 4 < argument.size())
@@ -58,11 +36,12 @@ bool Executable::execute()
 				i++;
 			}
 		}
-		if(argument.at(i) == ';' || argument.at(i) == argument.at(i + 1) == '&' || argument.at(i) == argument.at(i + 1) == '|' )
+		if(argument.at(i) == ';' || argument.at(i) == '&' || argument.at(i + 1) == '&' || argument.at(i) == '|' || argument.at(i + 1) == '|')
 		{
 			exit(0);
 		}
 	}
+	
 	i = 0;
 	inputC = new char[argument.size()];
 	strcpy(inputC, argument.c_str());
@@ -87,7 +66,6 @@ bool Executable::execute()
     //cout << pid_child << endl;
     if(pid_child == -1)
     {
-    	cout << "error -1" << endl;
     	//an error in the fork process
     	perror("Fork");
     	
@@ -95,7 +73,6 @@ bool Executable::execute()
     }
     if(pid_child == 0)
     {
-    	cout << "execvp works..";
     	//process is the the child
     	int ret = execvp(argv[0], argv);
     	
