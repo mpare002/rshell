@@ -54,8 +54,6 @@ bool Executable::execute()
 	}
 	newArgs[i] = NULL;
 
-
-
 	//Here is where we implement the system calls
     bool result = true;
     int pid_child;
@@ -99,6 +97,8 @@ bool Executable::execute()
     {
     	delete newInput;
     }
+    
+    delete cmd;
     return result;
 }
 

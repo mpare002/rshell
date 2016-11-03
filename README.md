@@ -19,5 +19,7 @@ connector = || or && or ;
 Note this program can take more than one command on a line and can be separated by connectors. There are no limits to the nuber of commands which can be chained together, and any combination of operators can be handled. 
 
 ## Known Bugs
-1. This program currently does not allow the `cd` command. This will be handled in a future version. When the `cd` command is used in a command line, the program will not run.
-2. 
+1. This program currently does not allow the `cd` command. This will be handled in a future version.
+2. When the `cd` command is used in a command line, the program will not run.
+3. The program is unable to handle multiple commands being typed in a single command line with improper arguments, i.e. `&&||7789;;||`.
+4. The program does not work when connectors do not have arguments on the left and right, i.e. `echo world ||`.

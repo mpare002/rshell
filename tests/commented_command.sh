@@ -1,6 +1,5 @@
 #!/bin/sh
 ### this is our commented command test ###
-../bin/rshell < commented_command
 ../bin/rshell < echo hello #world
 ../bin/rshell < ls -a || echo hello world #testing comments on multiple commands
 ../bin/rshell < ps #exit
