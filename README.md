@@ -4,7 +4,7 @@
 Michael Pare  
 Ryan Ulep
 
-## Coding Requirements
+## Coding Specifications
 This program acts as a command shell and performs the following:
 
 1. Prints a command prompt.
