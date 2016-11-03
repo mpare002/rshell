@@ -5,8 +5,8 @@ using namespace std;
 bool Executable::execute()
 {
 	unsigned i = 0;
-	char *argv[10000];
-	char *inputC;
+	char *newArgs[10000];
+	char *newInput;
 	char *cmd;
 	argument.erase(argument.find_last_not_of(' ') + 1);
 	
@@ -43,16 +43,16 @@ bool Executable::execute()
 	}
 	
 	i = 0;
-	inputC = new char[argument.size()];
-	strcpy(inputC, argument.c_str());
-	cmd = strtok(inputC, " \t");
+	newInput = new char[argument.size()];
+	strcpy(newInput, argument.c_str());
+	cmd = strtok(newInput, " \t");
 	while(cmd != NULL)
 	{
-		argv[i] = cmd;
+		newArgs[i] = cmd;
 		cmd = strtok(NULL, " \t");
 		i++;
 	}
-	argv[i] = NULL;
+	newArgs[i] = NULL;
 
 
 
@@ -74,7 +74,7 @@ bool Executable::execute()
     if(pid_child == 0)
     {
     	//process is the the child
-    	int ret = execvp(argv[0], argv);
+    	int ret = execvp(newArgs[0], newArgs);
     	
 		if(ret == -1)
 		{
@@ -97,7 +97,7 @@ bool Executable::execute()
 
     if(pid_child > 0)
     {
-    	delete inputC;
+    	delete newInput;
     }
     return result;
 }
