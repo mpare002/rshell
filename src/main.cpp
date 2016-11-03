@@ -53,8 +53,9 @@ int main()
 		
 		// Create commands and execute bash line
 		Base* start = parse(bash_command);
-	
-		start->execute();
+		if (start != 0) {
+			start->execute();
+		}
 	}
 	
 	return 0;
@@ -79,6 +80,10 @@ Base* parse(string input) {
     
     // Build connector container
     connectors(input, connector);
+
+    if (arguments.empty()) {
+    	return 0;
+    }
     
     // Create operation ordering system
     return constructOrder(connector,arguments);
