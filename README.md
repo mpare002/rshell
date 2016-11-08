@@ -24,4 +24,3 @@ Note this program can take more than one command on a line and can be separated 
 3. The rshell is unable to handle multiple commands being typed in a single command line with improper arguments, i.e. `&&||7789;;||`.
 4. The rshell does not work when connectors do not have arguments on the left and right, i.e. `echo world ||`.
 5. The rshell cannot handle leading or trailing connectors, i.e. `&& ls` or `echo world ||`.
-6. Certain orders of connectors function differently in certain situations. This will be fixed in a future release.

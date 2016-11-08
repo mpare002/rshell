@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include <string>
 #include <vector>
-#include <stack>
+#include <queue>
 #include <boost/tokenizer.hpp>
 #include <boost/algorithm/string.hpp>
 #include "argument.h"
@@ -18,10 +18,10 @@ using namespace boost;
 typedef boost::tokenizer<boost::char_separator<char> > mytok;
 typedef mytok::iterator tok_it;
 
-void connectors(string command, stack<string> &conn);
+void connectors(string command, queue<string> &conn);
 Base* parse(string input);
-Base* constructOrder(stack<string> &con, stack<string> &commands);
-Base* constructOrder(stack<string> &con, stack<string> &commands, Base* b);
+Base* constructOrder(queue<string> &con, queue<string> &commands);
+Base* constructOrder(queue<string> &con, queue<string> &commands, Base* b);
 
 int main()
 {
@@ -56,6 +56,7 @@ int main()
 		if (start != 0) {
 			start->execute();
 		}
+		delete start;
 	}
 	
 	return 0;
@@ -64,8 +65,8 @@ int main()
 Base* parse(string input) {
 	
 	// Declare container to hold commands and connectors
-	stack<string> arguments;
-	stack<string> connector;
+	queue<string> arguments;
+	queue<string> connector;
 
 	// Initiate tokenizer
     boost::char_separator<char> delim(";&&||");
@@ -89,19 +90,19 @@ Base* parse(string input) {
     return constructOrder(connector,arguments);
 }
 
-Base* constructOrder(stack<string> &con, stack<string> &commands) {
+Base* constructOrder(queue<string> &con, queue<string> &commands) {
 	if (con.empty() && commands.size() == 1) {
-		return new Executable(commands.top());
+		return new Executable(commands.front());
 	}
 	
 	else {
 		while (!con.empty()) {
-			string connector = con.top();
+			string connector = con.front();
 			con.pop();
 			
-			string comm2 = commands.top(); // will get right since stack
+			string comm1 = commands.front(); // will get left since queue
 			commands.pop();
-			string comm1 = commands.top(); // will get left
+			string comm2 = commands.front(); // will get right
 			commands.pop();
 			
 			if (connector == ";") {
@@ -120,36 +121,36 @@ Base* constructOrder(stack<string> &con, stack<string> &commands) {
 			}
 		}
 		
-		return new Executable(commands.top());
+		return new Executable(commands.front());
 	}
 }
 
-Base* constructOrder(stack<string> &con, stack<string> &commands, Base* b) {
+Base* constructOrder(queue<string> &con, queue<string> &commands, Base* b) {
 	// This is the recursive construction, continues building tree, and returns highest pointer
-	if (con.empty() && commands.empty()) {
+	if (con.empty() || commands.empty()) {
 		return b;
 	}
 	
 	else {
 		while (!con.empty()) {
-			string connector = con.top();
+			string connector = con.front();
 			con.pop();
 			
-			string comm = commands.top(); // will get left since right was already made executable
+			string comm = commands.front(); // will get left since right was already made executable
 			commands.pop();
 			
 			if (connector == ";") {
-				Base* semicom = new Semicolon(new Executable(comm), b);
+				Base* semicom = new Semicolon(b, new Executable(comm));
 				return constructOrder(con, commands, semicom);
 			}
 			
 			else if (connector == "&&") {
-				Base* ancom = new And(new Executable(comm), b);
+				Base* ancom = new And(b, new Executable(comm));
 				return constructOrder(con, commands, ancom);
 			}
 			
-			else if (connector == "||") { //Can be added back in for future assignments
-				Base* orcom = new Or(new Executable(comm), b);
+			else if (connector == "||") {
+				Base* orcom = new Or(b, new Executable(comm));
 				return constructOrder(con, commands, orcom);
 			}
 		}
@@ -158,7 +159,7 @@ Base* constructOrder(stack<string> &con, stack<string> &commands, Base* b) {
 	}
 }
 
-void connectors(string command, stack<string> &conn) {
+void connectors(string command, queue<string> &conn) {
   for (size_t i = 0; i < command.size(); i++) {
 		if (command[i] == '|' && command[i+1] == '|') {
 			conn.push("||");

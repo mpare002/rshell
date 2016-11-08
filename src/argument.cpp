@@ -46,7 +46,7 @@ bool Executable::execute()
 	}
 	
 	i = 0;
-	newInput = new char[argument.size()];
+	newInput = new char[argument.size() + 1];
 	strcpy(newInput, argument.c_str());
 	cmd = strtok(newInput, " \t");
 	while(cmd != NULL)
@@ -94,11 +94,11 @@ bool Executable::execute()
     	}
     }
 
-    if(pid_child > 0)
+    /*if(pid_child > 0)
     {
     	delete newInput;
-    }
-
+    }*/
+	delete[] newInput;
     delete cmd;
     return result;
 }
@@ -108,11 +108,16 @@ bool And::execute()
 {
 	if(leftArg->execute() == true)
 	{
-		return rightArg->execute();
+		delete leftArg;
+		bool result = rightArg->execute();
+		delete rightArg;
+		return result;
 	}
 	else
 	{
-         return false;
+		delete leftArg;
+		delete rightArg;
+        return false;
 	}
 }
 
@@ -120,10 +125,15 @@ bool Or::execute()
 {
 	if(leftArg->execute() == false)
 	{
-		return this->rightArg->execute();
+		delete leftArg;
+		bool result = rightArg->execute();
+		delete rightArg;
+		return result;
 	}
 	else
 	{
+		delete leftArg;
+		delete rightArg;
 		return true;
 	}
 
@@ -131,21 +141,19 @@ bool Or::execute()
 
 bool Semicolon::execute() 
 {
-	leftArg->execute();
+	bool result = leftArg->execute();
+	delete leftArg;
 
 	if(rightArg != NULL)
 	{
-		if(rightArg->execute() == true)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		bool result2 = rightArg->execute();
+		delete rightArg;
+		
+		return result2;
 	}
 	else
 	{
-		return true;
+		delete rightArg;
+		return result;
 	}
 }
