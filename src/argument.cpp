@@ -57,22 +57,97 @@ bool Executable::execute()
 	}
 	newArgs[i] = NULL;
 
-	string tester(newArgs[0]);
 	
+	
+	string tester(newArgs[0]);
 	if(tester == "test")
 	{
+		//convert elements into strings for easier comparisons
 		if(newArgs[1] == NULL)
 		{
-			perror("not enough arguments");
+			//checks if there is no arguments after test 
+			cout << "(False)" << endl;
+			return false;
+		}
+		string flag(newArgs[1]);
+		if(newArgs[1] == '\0')
+		{
+			//calling test -flag with no args
+			cout << "(False)" << endl;
+			return false;
 		}
 		else
 		{
 			delete[] newInput;
     		delete cmd;
-			return test(newArgs[1], newArgs[2]);
+			struct stat buff; //create buffer object for stat()
+			if(flag == "-d")
+			{
+				//cout << "d" << endl;
+				stat(newArgs[2], &buff);
+				if(S_ISDIR(buff.st_mode))
+				{
+					cout << "(True)" << endl;
+					return true;
+				}
+				else
+				{
+					cout << "(False)" << endl;
+					return false;
+				}
+
+			}
+			if(flag == "-f")
+			{
+				//cout << "f" << endl;
+				stat(newArgs[2], &buff);
+				if(S_ISREG(buff.st_mode))
+				{
+					cout << "(True)" << endl;
+					return true;
+				}
+				else
+				{
+					cout << "(False)" << endl;
+					return false;
+				}
+
+			}
+			else
+			{
+				if(flag == "-e")
+				{
+					//cout << "e" << endl;
+					if(stat(newArgs[2], &buff) == -1)
+					{
+						cout << "(False)" << endl;
+						return false;
+					}
+					else
+					{
+						cout << "(True)" << endl;
+						return true;
+					}
+
+				}
+				else
+				{
+					//cout << "no flag" << endl;
+					if(stat(newArgs[1], &buff) == -1)
+					{
+						cout << "(False)" << endl;
+						return false;
+					}
+					else
+					{	
+						cout << "(True)" << endl;
+						return true;
+					}	
+				}
+			}
 		}
 	}
-
+	
 	//Here is where we implement the system calls
     bool result = true;
     int pid_child;
@@ -114,86 +189,6 @@ bool Executable::execute()
 	delete[] newInput;
     delete cmd;
     return result;
-}
-
-bool Executable::test(char arr1[], char arr2[])
-{
-	struct stat buff;
-	const char* arr1v = arr1;
-	const char* arr2v= arr2;
-	string temp1(arr1);
-	string temp2(arr2);
-
-	cout << temp1 << endl;
-	cout << temp2 << endl;
-	
-	cout << "inside test" << endl;
-	//this will check if file is a directory
-	if(temp1 == "-d")
-	{
-		cout << "d" << endl;
-		stat(*arr2v, &buff);
-		if(S_ISDIR(buff.st_mode))
-		{
-			cout << "(True)" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "(False)" << endl;
-			return false;
-		}
-
-	}
-	//this will check if the file is a regular file
-	else if(temp1 == "-f")
-	{
-		cout << "f" << endl;
-		stat(*arr2v, &buff);
-		if(S_ISREG(buff.st_mode))
-		{
-			cout << "(True)" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "(False)" << endl;
-			return false;
-		}
-	}
-	//this will check if the file is a regualr file or directory regardless of -e flag
-	else
-	{
-		if(temp1 == "-e")
-		{
-			cout << "e" << endl;
-			if(stat(*arr2v, &buff) == -1)
-			{
-				cout << "(False)" << endl;
-				return false;
-			}
-			else
-			{
-				cout << "(True)" << endl;
-				return true;
-			}
-
-		}
-		else
-		{
-			cout << "no flag" << endl;
-			if(stat(*arr1v, &buff) == -1)
-			{
-				cout << "(False)!" << endl;
-				return false;
-			}
-			else
-			{
-				cout << "(True)" << endl;
-				return true;
-			}
-		}
-	}
 }
 
 

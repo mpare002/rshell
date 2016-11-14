@@ -34,7 +34,7 @@ class Executable : public Base {
       ~Executable() { };
 
       string executable;
-      bool Executable::test(char arr1[], char arr2[]);
+      bool test(char arr1[], char arr2[]);
       bool execute();
 };
 
