@@ -14,4 +14,4 @@ rshell:
 	$(COMPILE) $(FLAGS) src/main.cpp src/argument.cpp src/argument.h -o bin/rshell
 
 clean:
-	rm -rf *~ *.o a.out
+	-rm -rf bin/

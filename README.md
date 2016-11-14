@@ -2,6 +2,7 @@
 
 ## Collaborating Students
 Michael Pare  
+Tommy Shiels  
 Ryan Ulep
 
 ## Coding Specifications
@@ -22,5 +23,5 @@ Note this program can take more than one command on a line and can be separated 
 1. The rshell currently does not allow the `cd` command. This will be handled in a future version.
 2. When the `cd` command is used in a command line, the rshell will not run.
 3. The rshell is unable to handle multiple commands being typed in a single command line with improper arguments, i.e. `&&||7789;;||`.
-4. The rshell does not work when connectors do not have arguments on the left and right, i.e. `echo world ||`.
+4. The rshell does not work when connectors do not have arguments on the left and right, i.e. `&& mkdir stuff` and `echo world ||`.
 5. The rshell cannot handle leading or trailing connectors, i.e. `&& ls` or `echo world ||`.

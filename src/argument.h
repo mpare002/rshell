@@ -69,4 +69,29 @@ class Semicolon : public Base {
       bool execute();
 };
 
+class Test : public Base {
+   private:
+      string test;
+      Base* Arg;
+   public:
+      Test() { };
+      Test(string t) : test(t) { };
+      Test(Base* arg) : Arg(arg) { };
+      ~Test() { };
+      bool execute();
+};
+
+class Precedence : public Base {
+   private:
+      string prec;
+      Base* leftArg;
+      Base* rightArg;
+   public:
+      Precedence() { };
+      Precedence(Base* left, Base* right) : leftArg(left), rightArg(right) { };
+      Precedence(string pre) : prec(pre) { };
+      ~Precedence() { };
+      bool execute();
+};
+
 #endif
