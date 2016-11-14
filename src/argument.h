@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <signal.h>
 
 using namespace std;
@@ -33,6 +34,7 @@ class Executable : public Base {
       ~Executable() { };
 
       string executable;
+      bool Executable::test(char arr1[], char arr2[]);
       bool execute();
 };
 
