@@ -11,7 +11,7 @@ all: rshell
 
 rshell: 
 	@mkdir -p bin
-	$(COMPILE) $(FLAGS) src/main.cpp src/argument.cpp src/argument.h -o bin/rshell
+	$(COMPILE) $(FLAGS) src/main.cpp src/argument.cpp src/parse.cpp -o bin/rshell
 
 clean:
 	-rm -rf bin/

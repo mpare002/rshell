@@ -21,7 +21,6 @@ class Base {
    public:
       Base() { };
       virtual ~Base() { };
-
       virtual bool execute() = 0;
 };
 
@@ -30,24 +29,10 @@ class Executable : public Base {
       string argument;
    public:
       Executable() { };
-      Executable(string arg) : argument(arg) 
-      {
-         if (argument.find("[") != string::npos)
-         {
-            argument = trim_copy(argument);
-            argument = argument.substr(argument.find("[") + 1);
-            size_t s = argument.find("]");
-		      if (s != string::npos) {
-			      argument.erase(s);
-		      }
-		      argument = trim_copy(argument);
-		      argument = "test " + argument;
-         }
-      };
+      Executable(string arg) : argument(arg) { };
       ~Executable() { };
 
       string executable;
-      bool test(char arr1[], char arr2[]);
       bool execute();
 };
 
@@ -86,25 +71,20 @@ class Semicolon : public Base {
 
 class Test : public Base {
    private:
-      string test;
       Base* Arg;
    public:
       Test() { };
-      Test(string t) : test(t) { };
-      Test(Base* arg) : Arg(arg) { };
+      Test(string t);
       ~Test() { };
       bool execute();
 };
 
 class Precedence : public Base {
    private:
-      string prec;
-      Base* leftArg;
-      Base* rightArg;
+      Base* Arg;
    public:
       Precedence() { };
-      Precedence(Base* left, Base* right) : leftArg(left), rightArg(right) { };
-      Precedence(string pre) : prec(pre) { };
+      Precedence(string s);
       ~Precedence() { };
       bool execute();
 };

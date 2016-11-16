@@ -1,6 +1,20 @@
 #include "argument.h"
+#include <iostream>
+#include <unistd.h>
+#include <stdio.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <string>
+#include <vector>
+#include <queue>
+#include <boost/tokenizer.hpp>
+#include <boost/algorithm/string.hpp>
+#include "parse.h"
+#include <cstddef>
 
 using namespace std;
+using namespace boost;
 
 bool Executable::execute()
 {
@@ -81,7 +95,8 @@ bool Executable::execute()
 			delete[] newInput;
     		delete cmd;
 			struct stat buff; //create buffer object for stat()
-			if(flag == "-d")
+			//cout << "flag = " << flag << endl;
+            if(flag == "-d")
 			{
 				//cout << "d" << endl;
 				stat(newArgs[2], &buff);
@@ -232,7 +247,7 @@ bool Semicolon::execute()
 	bool result = leftArg->execute();
 	delete leftArg;
 
-	if(rightArg != NULL)
+	if (rightArg != NULL)
 	{
 		bool result2 = rightArg->execute();
 		delete rightArg;
@@ -244,4 +259,36 @@ bool Semicolon::execute()
 		delete rightArg;
 		return result;
 	}
+}
+
+Test::Test(string t) {
+	if (t.find('[') != string::npos)
+	{
+		string r = trim_copy(t);
+		string u = r.substr(r.find('[') + 1);
+		size_t s = u.find(']');
+		
+		if (s != string::npos) {
+		  u.erase(s);
+		}
+		
+		string v = trim_copy(u);
+        //cout << "v = " << v << endl;
+	    v = "test " + v;
+		
+		Arg = new Executable(v);
+	}
+}
+
+bool Test::execute() {
+	return Arg->execute();
+}
+
+Precedence::Precedence(string s) {
+	Base* b = parse(s);
+	Arg = b;
+}
+
+bool Precedence::execute() {
+	return Arg->execute();
 }
