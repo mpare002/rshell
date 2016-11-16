@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <signal.h>
 
 using namespace std;
@@ -29,10 +30,24 @@ class Executable : public Base {
       string argument;
    public:
       Executable() { };
-      Executable(string arg) : argument(arg) { };
+      Executable(string arg) : argument(arg) 
+      {
+         if (argument.find("[") != string::npos)
+         {
+            argument = trim_copy(argument);
+            argument = argument.substr(argument.find("[") + 1);
+            size_t s = argument.find("]");
+		      if (s != string::npos) {
+			      argument.erase(s);
+		      }
+		      argument = trim_copy(argument);
+		      argument = "test " + argument;
+         }
+      };
       ~Executable() { };
 
       string executable;
+      bool test(char arr1[], char arr2[]);
       bool execute();
 };
 

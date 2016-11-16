@@ -57,6 +57,97 @@ bool Executable::execute()
 	}
 	newArgs[i] = NULL;
 
+	
+	
+	string tester(newArgs[0]);
+	if(tester == "test")
+	{
+		//convert elements into strings for easier comparisons
+		if(newArgs[1] == NULL)
+		{
+			//checks if there is no arguments after test 
+			cout << "(False)" << endl;
+			return false;
+		}
+		string flag(newArgs[1]);
+		if(newArgs[1] == '\0')
+		{
+			//calling test -flag with no args
+			cout << "(False)" << endl;
+			return false;
+		}
+		else
+		{
+			delete[] newInput;
+    		delete cmd;
+			struct stat buff; //create buffer object for stat()
+			if(flag == "-d")
+			{
+				//cout << "d" << endl;
+				stat(newArgs[2], &buff);
+				if(S_ISDIR(buff.st_mode))
+				{
+					cout << "(True)" << endl;
+					return true;
+				}
+				else
+				{
+					cout << "(False)" << endl;
+					return false;
+				}
+
+			}
+			if(flag == "-f")
+			{
+				//cout << "f" << endl;
+				stat(newArgs[2], &buff);
+				if(S_ISREG(buff.st_mode))
+				{
+					cout << "(True)" << endl;
+					return true;
+				}
+				else
+				{
+					cout << "(False)" << endl;
+					return false;
+				}
+
+			}
+			else
+			{
+				if(flag == "-e")
+				{
+					//cout << "e" << endl;
+					if(stat(newArgs[2], &buff) == -1)
+					{
+						cout << "(False)" << endl;
+						return false;
+					}
+					else
+					{
+						cout << "(True)" << endl;
+						return true;
+					}
+
+				}
+				else
+				{
+					//cout << "no flag" << endl;
+					if(stat(newArgs[1], &buff) == -1)
+					{
+						cout << "(False)" << endl;
+						return false;
+					}
+					else
+					{	
+						cout << "(True)" << endl;
+						return true;
+					}	
+				}
+			}
+		}
+	}
+	
 	//Here is where we implement the system calls
     bool result = true;
     int pid_child;
@@ -94,10 +185,7 @@ bool Executable::execute()
     	}
     }
 
-    /*if(pid_child > 0)
-    {
-    	delete newInput;
-    }*/
+    
 	delete[] newInput;
     delete cmd;
     return result;
