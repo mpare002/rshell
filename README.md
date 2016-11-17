@@ -10,11 +10,9 @@ This program acts as a command shell and performs the following:
 
 1. Prints a command prompt.
 2. The programs run until exit is read in on the command line.
-3. The rshell can also handle precendence and test operators.
-4. Reads in a command on one line. These commands take the form:
-5. The rshell can handle precedence operators, `(echo A && echo B) || (echo C && echo D)`.  
-6. The rshell can execute test operations in either of the following formats: `test -e Makefile` and `[ -e Makefile ]`.
-
+3. The rshell can handle precedence operators, `(echo A && echo B) || (echo C && echo D)`.  
+4. The rshell can execute test operations in either of the following formats: `test -e Makefile` and `[ -e Makefile ]`.
+5. Reads in a command on one line. These commands take the form:
 ```
 cmd = executable [argumentList] [connector cmd]
 connector = || or && or ;
