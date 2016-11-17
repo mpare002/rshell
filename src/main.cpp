@@ -43,10 +43,28 @@ int main()
 			// Trim left and right whitespace
 			string bash_command = trim_copy(bash_input);
 			
+         // Check for leading connectors
 			if (bash_command.at(0) == '|') {
-				throw runtime_error("syntax error near unexpected token");
+				throw runtime_error("-rshell: syntax error near unexpected token `||`");
 			}
 			
+			if (bash_command.at(0) == '&') {
+				throw runtime_error("-rshell: syntax error near unexpected token `&&`");
+			}
+
+			if (bash_command.at(0) == ';') {
+				throw runtime_error("-rshell: syntax error near unexpected token `;`");
+			}
+
+         // Check for trailing connectors
+         while (bash_command.at(bash_command.size() - 1) == '|' || bash_command.at(bash_command.size() - 1) == '&' || bash_command.at(bash_command.size() - 1) == ';') {
+            cout << "> ";
+            string nextInput;
+            getline(cin, nextInput);
+            string nextPiece = trim_copy(nextInput);
+            bash_command = bash_command + nextPiece;
+         }
+
 			// Now look for exit as only command and quit if necessary
 			if (bash_command == "exit") {
 				exit(0);
