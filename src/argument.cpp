@@ -281,7 +281,9 @@ Test::Test(string t) {
 }
 
 bool Test::execute() {
-	return Arg->execute();
+	bool a = Arg->execute();
+   delete Arg;
+   return a;
 }
 
 Precedence::Precedence(string s) {
@@ -290,5 +292,7 @@ Precedence::Precedence(string s) {
 }
 
 bool Precedence::execute() {
-	return Arg->execute();
+   bool a = Arg->execute();
+   delete Arg;
+   return a;
 }
