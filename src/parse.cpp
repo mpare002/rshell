@@ -53,8 +53,11 @@ Base* parse(string input) {
 					// Replace removed portion with keyword "PREC"
                input.replace(j, ((a + 1) - j), "PREC");
             }
-			}
-		}
+			}	
+         if (a == input.size() - 1) {
+            throw runtime_error("-rshell: '(' missing ')'");
+         }
+      }
 		j = input.find('(');
 	}
 	
@@ -85,11 +88,14 @@ Base* parse(string input) {
 					input.replace(k, ((a+1) - k), "TEST");
 				}
 			}
+         if (a == input.size() - 1) {
+            throw runtime_error("-rshell: '[' missing ']'");
+         }
 		}
 		k = input.find('[');
 	}
-
-	// Initiate tokenizer
+	
+   // Initiate tokenizer
     boost::char_separator<char> delim(";&&||");
     boost::tokenizer< boost::char_separator<char> > mytok(input, delim);
 	
@@ -145,7 +151,7 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
             
             // Create appropriate object types based on connectors and if no precedence or test
 			if (prectest.empty()) {
-				if (connector == ";") {
+            if (connector == ";") {
 					Base* semicom = new Semicolon(new Executable(comm1), new Executable(comm2));
 					return constructOrder(con, commands, prectest, semicom);
 				}
@@ -168,7 +174,8 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 				
 				Base* b1 = 0;
 				Base* b2 = 0;
-				// Create appropriate objects
+				
+            // Create appropriate objects
 				if (comm1 == "PREC" || comm1 == "TEST") {
                     string str1 = prectest.front();
                     prectest.pop();
@@ -192,7 +199,7 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 						b2 = new Test(str2);
 					}
 				}
-				
+
 				// Starting constructing tree
 				if (b1 == 0 && b2 != 0) {
 					if (connector == ";") {
@@ -254,7 +261,8 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 
 Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> &prectest, Base* b) {
 	// This is the recursive construction, continues building tree, and returns highest pointer
-	if (con.empty() || commands.empty() ) {
+   
+   if (con.empty() || commands.empty() ) {
 		return b;
 	}
 	
@@ -269,7 +277,7 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 			// Will build object types based off connectors
 			// Uses this if prectest is empty
 			if (prectest.empty()) {
-				if (connector == ";") {
+            if (connector == ";") {
 					Base* semicom = new Semicolon(b, new Executable(comm));
 					return constructOrder(con, commands, prectest, semicom);
 				}
