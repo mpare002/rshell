@@ -47,12 +47,9 @@ Base* parse(string input) {
 				}
 				else {
 					// Pull out substring and push into queue
-                    //cout << input.substr(j+1, ((a-1) - j)) << endl;
 					blackbox.push(input.substr(j+1, ((a - 1) - j)));
-				    //size_t str_size = input.size();	
 					// Replace removed portion with keyword "PREC"
                     input.replace(j, ((a + 1) - j), "PREC");
-                    //cout << input << endl;
 				}
 			}
 		}
@@ -66,7 +63,6 @@ Base* parse(string input) {
 		// Initiate tracking variable
 		int t = -1;
 		
-		//cout << input << endl;
 		// Start looping through remainder of string
 		for (size_t a = k; a < input.size(); ++a) {
 			
@@ -83,10 +79,8 @@ Base* parse(string input) {
 				else {
 					// Pull out substring and push into queue
 					blackbox.push(input.substr(k, ((a+1) - k)));
-					//cout << input.substr(k, ((a+1) - k)) << endl;
 					// Replace removed portion with keyword "PREC"
 					input.replace(k, ((a+1) - k), "TEST");
-                    //cout << input << endl;
 				}
 			}
 		}
@@ -116,8 +110,17 @@ Base* parse(string input) {
 }
 
 Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> &prectest) {
-	if (con.empty() && commands.size() == 1) {
+	if (con.empty() && commands.size() == 1 && prectest.size() == 0) {
 		return new Executable(commands.front());
+	}
+	
+	else if (con.empty() && commands.size() == 1 && prectest.size() == 1) {
+		if (commands.front() == "PREC") {
+			return new Precedence(prectest.front());
+		}
+		else {
+			return new Test(prectest.front());
+		}
 	}
 	
 	else {
@@ -129,10 +132,7 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 			commands.pop();
 			string comm2 = commands.front(); // will get right
 			commands.pop();
-            //cout << "string 1 " << comm1 << " string 2 " << comm2 << endl;	
-            //if(!prectest.empty()){
-                //cout << "Prectest not empty" << endl;
-            //}
+            
             // Create appropriate object types based on connectors and if no precedence or test
 			if (prectest.empty()) {
 				if (connector == ";") {
@@ -152,20 +152,16 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 			}
 			// Create appropriate objects if a precedence or test is present
 			else {
-                //cout << "in else" << endl;
 				// Initialize variables
 				string str1 = "";
 				string str2 = "";
 				
 				Base* b1 = 0;
 				Base* b2 = 0;
-				//cout << "in else" << endl;
 				// Create appropriate objects
 				if (comm1 == "PREC" || comm1 == "TEST") {
-					//cout << "in if" << endl;
                     string str1 = prectest.front();
 					// Take substring without beginning or ending bracket
-					//cout << "STR 1 " << str1 << endl;
                     prectest.pop();
 					
 					if (comm1 == "PREC") {
@@ -253,7 +249,6 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> &prectest, Base* b) {
 	// This is the recursive construction, continues building tree, and returns highest pointer
 	if (con.empty() || commands.empty() ) {
-        //cout << "test Case met" << endl;
 		return b;
 	}
 	
@@ -293,7 +288,6 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 				// Create appropriate objects
 				if (comm == "PREC" || comm == "TEST") {
 					string str = prectest.front();
-					// Take substring without beginning or ending bracket
 					prectest.pop();
 					
 					if (comm == "PREC") {
