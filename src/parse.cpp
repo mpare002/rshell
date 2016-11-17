@@ -32,10 +32,11 @@ Base* parse(string input) {
 	// Do pre-parsing for precedence here
 	size_t j = input.find('(');
 	while (j != string::npos) {
-	// Initiate tracking variable
+	   // Initiate tracking variable
 		int t = -1;
-        size_t a;
-		// Start looping through remainder of string
+      size_t a;
+		
+      // Start looping through remainder of string
 		for (a = j; a < input.size(); ++a) {
 			// Increases tracker to keep precedence in order
 			if (input.at(a) == '(') {
@@ -50,14 +51,14 @@ Base* parse(string input) {
 					// Pull out substring and push into queue
 					blackbox.push(input.substr(j+1, ((a - 1) - j)));
 					// Replace removed portion with keyword "PREC"
-                    input.replace(j, ((a + 1) - j), "PREC");
-				}
+               input.replace(j, ((a + 1) - j), "PREC");
+            }
 			}
 		}
 		j = input.find('(');
 	}
 	
-	// Do pre-parsing for test command here
+   // Do pre-parsing for test command here
 	size_t k = input.find('[');
 	
 	while (k != string::npos) {
@@ -133,7 +134,7 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 	}
 	
 	else {
-		while (!con.empty()) {
+		if (!con.empty()) {
 			string connector = con.front();
 			con.pop();
 			
@@ -170,13 +171,10 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 				// Create appropriate objects
 				if (comm1 == "PREC" || comm1 == "TEST") {
                     string str1 = prectest.front();
-					// Take substring without beginning or ending bracket
                     prectest.pop();
 					
 					if (comm1 == "PREC") {
-                        //cout << "In Precedence " << endl;
 						b1 = new Precedence(str1);
-                        //cout << "After Precendence " << endl;
 					}
 					if (comm1 == "TEST") {
 						b1 = new Test(str1);
@@ -185,7 +183,6 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 				
 				if (comm2 == "PREC" || comm2 == "TEST") {
 					string str2 = prectest.front();
-					// Take substring without beginning or ending bracket
 					prectest.pop();
 					
 					if (comm2 == "PREC") {
@@ -262,7 +259,7 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 	}
 	
 	else {
-		while (!con.empty()) {
+		if (!con.empty()) {
 			string connector = con.front();
 			con.pop();
 			
