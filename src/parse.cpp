@@ -44,7 +44,7 @@ Base* parse(string input) {
 			}
 			// Will check for corresponding parentheses
 			if (input.at(a) == ')') {
-                if (t != 0) {
+               if (t != 0) {
 					--t;
 				}
 				else {
@@ -52,10 +52,11 @@ Base* parse(string input) {
 					blackbox.push(input.substr(j+1, ((a - 1) - j)));
 					// Replace removed portion with keyword "PREC"
                input.replace(j, ((a + 1) - j), "PREC");
+               break;
             }
 			}	
          if (a == input.size() - 1) {
-            throw runtime_error("-rshell: '(' missing ')'");
+            throw runtime_error("'(' missing ')'");
          }
       }
 		j = input.find('(');
@@ -86,10 +87,11 @@ Base* parse(string input) {
 					blackbox.push(input.substr(k, ((a+1) - k)));
 					// Replace removed portion with keyword "PREC"
 					input.replace(k, ((a+1) - k), "TEST");
+               break;
 				}
 			}
          if (a == input.size() - 1) {
-            throw runtime_error("-rshell: '[' missing ']'");
+            throw runtime_error("'[' missing ']'");
          }
 		}
 		k = input.find('[');
@@ -117,7 +119,7 @@ Base* parse(string input) {
 
     for (unsigned i = 0; i < argtest.size(); ++i) {
        if (argtest.at(i) == "") {
-          throw runtime_error("-rshell: syntax error: invalid connectors");
+          throw runtime_error("syntax error: check arguments and connectors");
        }
     }
     

@@ -45,15 +45,15 @@ int main()
 			
          // Check for leading connectors
 			if (bash_command.at(0) == '|') {
-				throw runtime_error("-rshell: syntax error near unexpected token `||`");
+				throw runtime_error("syntax error near unexpected token `||`");
 			}
 			
 			if (bash_command.at(0) == '&') {
-				throw runtime_error("-rshell: syntax error near unexpected token `&&`");
+				throw runtime_error("syntax error near unexpected token `&&`");
 			}
 
 			if (bash_command.at(0) == ';') {
-				throw runtime_error("-rshell: syntax error near unexpected token `;`");
+				throw runtime_error("syntax error near unexpected token `;`");
 			}
 
          // Check for trailing connectors
@@ -78,7 +78,7 @@ int main()
 			delete start;
 		}
 		catch (runtime_error &e) {
-			cout << e.what() << endl;
+			cout << "-rshell: " << e.what() << endl;
 		}
 	}
 	
