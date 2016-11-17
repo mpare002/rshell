@@ -11,6 +11,7 @@
 #include <boost/algorithm/string.hpp>
 #include "argument.h"
 #include "parse.h"
+#include <stdexcept>
 #include <cstddef>
 
 using namespace std;
@@ -92,17 +93,25 @@ Base* parse(string input) {
     boost::tokenizer< boost::char_separator<char> > mytok(input, delim);
 	
 	// Build command container
+   vector<string> argtest;
     for (tok_it i = mytok.begin(); i != mytok.end(); ++i) {
         string temp = *i;
         string token = trim_copy(temp);
         arguments.push(token);
+        argtest.push_back(token);
     }
     
     // Build connector container
     connectors(input, connector);
-
+    
     if (arguments.empty()) {
     	return 0;
+    }
+
+    for (unsigned i = 0; i < argtest.size(); ++i) {
+       if (argtest.at(i) == "") {
+          throw runtime_error("-rshell: syntax error: invalid connectors");
+       }
     }
     
     // Create operation ordering system
@@ -323,8 +332,7 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 }
 
 void connectors(string command, queue<string> &conn) {
-  for (size_t i = 0; i < command.size(); i++) {
-  		
+  for (size_t i = 0; i < command.size(); i++) {	
   		// Will iterate through string to create connector queue
 		if (command[i] == '|' && command[i+1] == '|') {
 			conn.push("||");
