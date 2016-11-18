@@ -89,7 +89,8 @@ Base* parse(string input) {
 					blackbox.push(input.substr(k, ((a+1) - k)));
 					// Replace removed portion with keyword "PREC"
 					input.replace(k, ((a+1) - k), "TEST");
-				}
+				   break;
+            }
 			}
          if (a == input.size() - 1) {
             throw runtime_error("'[' missing ']'");
