@@ -335,17 +335,17 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 				// Starting constructing tree
 				if (c != 0) {
 					if (connector == ";") {
-						Base* semicom = new Semicolon(new Executable(comm), c);
+						Base* semicom = new Semicolon(b, c);
 						return constructOrder(con, commands, prectest, semicom);
 					}
 					
 					else if (connector == "&&") {
-						Base* ancom = new And(new Executable(comm), c);
+						Base* ancom = new And(b, c);
 						return constructOrder(con, commands, prectest, ancom);
 					}
 					
 					else if (connector == "||") {
-						Base* orcom = new Or(new Executable(comm), c);
+						Base* orcom = new Or(b, c);
 						return constructOrder(con, commands, prectest, orcom);
 					}
 				}
