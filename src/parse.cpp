@@ -52,6 +52,7 @@ Base* parse(string input) {
 					blackbox.push(input.substr(j+1, ((a - 1) - j)));
 					// Replace removed portion with keyword "PREC"
                input.replace(j, ((a + 1) - j), "PREC");
+               j = input.find('(');
                break;
             }
 			}	
@@ -59,7 +60,6 @@ Base* parse(string input) {
             throw runtime_error("'(' missing ')'");
          }
       }
-		j = input.find('(');
 	}
 	
    // Do pre-parsing for test command here
@@ -87,14 +87,14 @@ Base* parse(string input) {
 					blackbox.push(input.substr(k, ((a+1) - k)));
 					// Replace removed portion with keyword "PREC"
 					input.replace(k, ((a+1) - k), "TEST");
+				   k = input.find('[');
                break;
-				}
+            }
 			}
          if (a == input.size() - 1) {
             throw runtime_error("'[' missing ']'");
          }
 		}
-		k = input.find('[');
 	}
 	
    // Initiate tokenizer
