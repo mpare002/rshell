@@ -52,7 +52,7 @@ Base* parse(string input) {
 					blackbox.push(input.substr(j+1, ((a - 1) - j)));
 					// Replace removed portion with keyword "PREC"
                input.replace(j, ((a + 1) - j), "PREC");
-               break;
+               j = input.find('(');
             }
 			}	
          if (a == input.size() - 1) {
@@ -60,6 +60,8 @@ Base* parse(string input) {
          }
       }
 		j = input.find('(');
+      cout << j << endl;
+      cout << "input after j: " << input << endl;
 	}
 	
    // Do pre-parsing for test command here
@@ -87,7 +89,6 @@ Base* parse(string input) {
 					blackbox.push(input.substr(k, ((a+1) - k)));
 					// Replace removed portion with keyword "PREC"
 					input.replace(k, ((a+1) - k), "TEST");
-               break;
 				}
 			}
          if (a == input.size() - 1) {
@@ -96,7 +97,7 @@ Base* parse(string input) {
 		}
 		k = input.find('[');
 	}
-	
+cout << "input: " << input << endl;	
    // Initiate tokenizer
     boost::char_separator<char> delim(";&&||");
     boost::tokenizer< boost::char_separator<char> > mytok(input, delim);
@@ -122,44 +123,57 @@ Base* parse(string input) {
           throw runtime_error("syntax error: check arguments and connectors");
        }
     }
-    
     // Create operation ordering system
     return constructOrder(connector, arguments, blackbox);
 }
 
 Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> &prectest) {
-	if (con.empty() && commands.size() == 1 && prectest.size() == 0) {
-		return new Executable(commands.front());
+	cout << "enter construct 1" << endl;
+   if (con.empty() && commands.size() == 1 && prectest.size() == 0) {
+		cout << "enter a1" << endl;
+      return new Executable(commands.front());
 	}
-	
-	else if (con.empty() && commands.size() == 1 && prectest.size() == 1) {
+cout << "passed if 1" << endl;	
+	if (con.empty() && commands.size() == 1 && prectest.size() == 1) {
 		if (commands.front() == "PREC") {
-			return new Precedence(prectest.front());
+			cout << "enter a2" << endl;
+         return new Precedence(prectest.front());
 		}
 		else {
-			return new Test(prectest.front());
+			cout << "enter a3" << endl;
+         return new Test(prectest.front());
 		}
 	}
-	
 	else {
-		if (!con.empty()) {
-			string connector = con.front();
+		cout << "entered else" << endl;
+      if (!con.empty()) {
+			cout << "enter a4" << endl;
+         for(unsigned int i = 0; i < con.size(); i++){
+            cout << "con at " << i << " = " << con.front()<< endl;
+         }
+         string connector = con.front();
 			con.pop();
+
+         
 			
 			string comm1 = commands.front(); // will get left since queue
 			commands.pop();
 			string comm2 = commands.front(); // will get right
 			commands.pop();
-            
-            // Create appropriate object types based on connectors and if no precedence or test
+         
+         cout << "a4 comm1: " << comm1 << endl;
+         cout << "a4 comm2: " << comm2 << endl;
+         // Create appropriate object types based on connectors and if no precedence or test
 			if (prectest.empty()) {
+            cout << "Enter prectest empty and connector: " << connector <<  endl;
             if (connector == ";") {
 					Base* semicom = new Semicolon(new Executable(comm1), new Executable(comm2));
 					return constructOrder(con, commands, prectest, semicom);
 				}
 				
 				else if (connector == "&&") {
-					Base* ancom = new And(new Executable(comm1), new Executable(comm2));
+					cout << "entered and" << endl;
+               Base* ancom = new And(new Executable(comm1), new Executable(comm2));
 					return constructOrder(con, commands, prectest, ancom);
 				}
 				
@@ -170,7 +184,8 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 			}
 			// Create appropriate objects if a precedence or test is present
 			else {
-				// Initialize variables
+				cout << "Enter prectest not empty" << endl;
+            // Initialize variables
 				string str1 = "";
 				string str2 = "";
 				
@@ -179,9 +194,10 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 				
             // Create appropriate objects
 				if (comm1 == "PREC" || comm1 == "TEST") {
-                    string str1 = prectest.front();
-                    prectest.pop();
-					
+                cout << "enter str1 prectest" << endl;
+                string str1 = prectest.front();
+                prectest.pop();
+					cout << "str1: " << str1 << endl;
 					if (comm1 == "PREC") {
 						b1 = new Precedence(str1);
 					}
@@ -191,9 +207,10 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 				}
 				
 				if (comm2 == "PREC" || comm2 == "TEST") {
-					string str2 = prectest.front();
+					cout << "enter str2 prectest" << endl;
+               string str2 = prectest.front();
 					prectest.pop();
-					
+					cout << "str2: " << str2 << endl;
 					if (comm2 == "PREC") {
 						b2 = new Precedence(str2);
 					}
@@ -255,7 +272,7 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 				}
 			}
 		}
-		
+		cout << "Passed if 3" << endl;
 		// If connector queue is empty then there is only one command which will be returned
 		return new Executable(commands.front());
 	}
@@ -339,6 +356,7 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 }
 
 void connectors(string command, queue<string> &conn) {
+  cout << "command connector is :" << command << endl;
   for (size_t i = 0; i < command.size(); i++) {	
   		// Will iterate through string to create connector queue
 		if (command[i] == '|' && command[i+1] == '|') {
@@ -351,4 +369,7 @@ void connectors(string command, queue<string> &conn) {
 			conn.push("&&");
 		}
 	}
+   for (unsigned int i = 0; i < conn.size(); i++){
+      cout << "connector queue at " << i << " = " << conn.front() << endl;
+   }
 }
