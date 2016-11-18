@@ -95,8 +95,7 @@ bool Executable::execute()
 			delete[] newInput;
     		delete cmd;
 			struct stat buff; //create buffer object for stat()
-			//cout << "flag = " << flag << endl;
-            if(flag == "-d")
+         if(flag == "-d")
 			{
 				//cout << "d" << endl;
 				stat(newArgs[2], &buff);
@@ -167,7 +166,8 @@ bool Executable::execute()
     bool result = true;
     int pid_child;
     int status;
-
+   
+   cout << newArgs[0] << endl;
     pid_child = fork();
     if(pid_child == -1)
     {
@@ -179,7 +179,7 @@ bool Executable::execute()
     if(pid_child == 0)
     {
     	//process is the child
-    	int ret = execvp(newArgs[0], newArgs);
+      int ret = execvp(newArgs[0], newArgs);
     	
 		if(ret == -1)
 		{

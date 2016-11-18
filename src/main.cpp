@@ -72,7 +72,8 @@ int main()
 			
 			// Create commands and execute bash line
 			Base* start = parse(bash_command);
-			if (start != 0) {
+			cout << "Returned from parsing all " << endl;
+         if (start != 0) {
 				start->execute();
 			}
 			delete start;
