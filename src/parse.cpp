@@ -29,7 +29,7 @@ Base* parse(string input) {
 	// Store "black boxing" commands here
 	queue<string> blackbox;
 	
-	// Do pre-parsing for precedence here
+   // Do pre-parsing for precedence here
 	size_t j = input.find('(');
 	while (j != string::npos) {
 	   // Initiate tracking variable
@@ -50,18 +50,16 @@ Base* parse(string input) {
 				else {
 					// Pull out substring and push into queue
 					blackbox.push(input.substr(j+1, ((a - 1) - j)));
-					// Replace removed portion with keyword "PREC"
+               // Replace removed portion with keyword "PREC"
                input.replace(j, ((a + 1) - j), "PREC");
                j = input.find('(');
+               break;
             }
 			}	
          if (a == input.size() - 1) {
             throw runtime_error("'(' missing ')'");
          }
       }
-		j = input.find('(');
-      cout << j << endl;
-      cout << "input after j: " << input << endl;
 	}
 	
    // Do pre-parsing for test command here
@@ -89,21 +87,21 @@ Base* parse(string input) {
 					blackbox.push(input.substr(k, ((a+1) - k)));
 					// Replace removed portion with keyword "PREC"
 					input.replace(k, ((a+1) - k), "TEST");
-				   break;
+				   k = input.find('[');
+               break;
             }
 			}
          if (a == input.size() - 1) {
             throw runtime_error("'[' missing ']'");
          }
 		}
-		k = input.find('[');
 	}
-cout << "input: " << input << endl;	
+   cout << "input: " << input << endl;	
    // Initiate tokenizer
     boost::char_separator<char> delim(";&&||");
     boost::tokenizer< boost::char_separator<char> > mytok(input, delim);
 	
-	// Build command container
+   // Build command container
    vector<string> argtest;
     for (tok_it i = mytok.begin(); i != mytok.end(); ++i) {
         string temp = *i;
@@ -134,7 +132,7 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 		cout << "enter a1" << endl;
       return new Executable(commands.front());
 	}
-cout << "passed if 1" << endl;	
+   cout << "passed if 1" << endl;	
 	if (con.empty() && commands.size() == 1 && prectest.size() == 1) {
 		if (commands.front() == "PREC") {
 			cout << "enter a2" << endl;
@@ -149,13 +147,10 @@ cout << "passed if 1" << endl;
 		cout << "entered else" << endl;
       if (!con.empty()) {
 			cout << "enter a4" << endl;
-         for(unsigned int i = 0; i < con.size(); i++){
-            cout << "con at " << i << " = " << con.front()<< endl;
-         }
          string connector = con.front();
 			con.pop();
 
-         
+         cout << "prectest size " << prectest.size() << endl;
 			
 			string comm1 = commands.front(); // will get left since queue
 			commands.pop();
@@ -179,7 +174,8 @@ cout << "passed if 1" << endl;
 				}
 				
 				else if (connector == "||") {
-					Base* orcom = new Or(new Executable(comm1), new Executable(comm2));
+					cout << "Entered or" << endl;
+               Base* orcom = new Or(new Executable(comm1), new Executable(comm2));
 					return constructOrder(con, commands, prectest, orcom);
 				}
 			}
@@ -222,7 +218,8 @@ cout << "passed if 1" << endl;
 
 				// Starting constructing tree
 				if (b1 == 0 && b2 != 0) {
-					if (connector == ";") {
+					cout << "Enter prectest a" << endl;
+               if (connector == ";") {
 						Base* semicom = new Semicolon(new Executable(comm1), b2);
 						return constructOrder(con, commands, prectest, semicom);
 					}
@@ -239,6 +236,7 @@ cout << "passed if 1" << endl;
 				}
 				
 				else if (b1 != 0 && b2 == 0) {
+					cout << "Enter prectest b" << endl;
 					if (connector == ";") {
 						Base* semicom = new Semicolon(b1, new Executable(comm2));
 						return constructOrder(con, commands, prectest, semicom);
@@ -256,7 +254,8 @@ cout << "passed if 1" << endl;
 				}
 				
 				else if (b1 != 0 && b2 != 0) {
-					if (connector == ";") {
+					cout << "Enter prectest c" << endl;
+               if (connector == ";") {
 						Base* semicom = new Semicolon(b1, b2);
 						return constructOrder(con, commands, prectest, semicom);
 					}
@@ -283,7 +282,8 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 	// This is the recursive construction, continues building tree, and returns highest pointer
    
    if (con.empty() || commands.empty() ) {
-		return b;
+		cout << "Hit base case recursive" << endl;
+      return b;
 	}
 	
 	else {
@@ -357,20 +357,16 @@ Base* constructOrder(queue<string> &con, queue<string> &commands, queue<string> 
 }
 
 void connectors(string command, queue<string> &conn) {
-  cout << "command connector is :" << command << endl;
   for (size_t i = 0; i < command.size(); i++) {	
   		// Will iterate through string to create connector queue
 		if (command[i] == '|' && command[i+1] == '|') {
-			conn.push("||");
+         conn.push("||");
 		}
 		else if (command[i] == ';') {
-			conn.push(";");
+         conn.push(";");
 		}
 		else if (command[i] == '&' && command[i+1] == '&') {
-			conn.push("&&");
+         conn.push("&&");
 		}
 	}
-   for (unsigned int i = 0; i < conn.size(); i++){
-      cout << "connector queue at " << i << " = " << conn.front() << endl;
-   }
 }
