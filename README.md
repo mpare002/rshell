@@ -24,3 +24,4 @@ There are no limits to the number of commands which can be chained together, and
 ## Known Bugs
 1. The rshell currently does not allow the `cd` command. This will be handled in a future version.
 2. When the `cd` command is used in a command line, the rshell will not run.
+3. The following command structure causes an error: `[some test] connector (a precedence)`.

@@ -270,7 +270,7 @@ Test::Test(string t) {
 		string v = trim_copy(u);
 	   v = "test " + v;
 		
-		Arg = new Executable(v);
+      Arg = new Executable(v);
 	}
 }
 
