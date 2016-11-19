@@ -1,0 +1,15 @@
+test -e argument.h && echo argument.h exists
+[ -e argument.h ] && echo argument.h exists
+test -d argument.h || echo directory argument.h does not exist
+[ -f argument.h ] && echo file argument.h exists
+[ -e  ; echo does nothing correctly with [ -e
+mkdir test_dir
+echo test_dir created
+touch testfile.cpp
+test -d test_dir && echo directory test_dir exists
+test -f testfile.cpp && echo file testfile.cpp exists
+rm testfile.cpp
+rm -r test_dir
+[ -d test_dir ] || echo directory test_dir does not exist
+test -f testfile.cpp || echo file testfile.cpp does not exist
+exit]]]]]
