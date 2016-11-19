@@ -69,9 +69,7 @@ bool Executable::execute()
 		cmd = strtok(NULL, " \t");
 		i++;
 	}
-	newArgs[i] = NULL;
-
-	
+	newArgs[i] = NULL;	
 	
 	string tester(newArgs[0]);
 	if(tester == "test")
@@ -97,7 +95,6 @@ bool Executable::execute()
 			struct stat buff; //create buffer object for stat()
          if(flag == "-d")
 			{
-				//cout << "d" << endl;
 				stat(newArgs[2], &buff);
 				if(S_ISDIR(buff.st_mode))
 				{
@@ -113,7 +110,6 @@ bool Executable::execute()
 			}
 			if(flag == "-f")
 			{
-				//cout << "f" << endl;
 				stat(newArgs[2], &buff);
 				if(S_ISREG(buff.st_mode))
 				{
@@ -167,7 +163,6 @@ bool Executable::execute()
     int pid_child;
     int status;
    
-   cout << newArgs[0] << endl;
     pid_child = fork();
     if(pid_child == -1)
     {
@@ -220,7 +215,7 @@ bool And::execute()
 	{
 		delete leftArg;
 		delete rightArg;
-        return false;
+      return false;
 	}
 }
 
@@ -273,8 +268,7 @@ Test::Test(string t) {
 		}
 		
 		string v = trim_copy(u);
-        //cout << "v = " << v << endl;
-	    v = "test " + v;
+	   v = "test " + v;
 		
 		Arg = new Executable(v);
 	}
