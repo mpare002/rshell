@@ -21,14 +21,39 @@ typedef boost::tokenizer<boost::char_separator<char> > mytok;
 typedef mytok::iterator tok_it;
 
 Base* parse(string input) {
-	
-	// Declare container to hold commands and connectors
+   // Check for empty commands
+   if (input == "") {
+      return 0;
+   }
+
+   // Check for leading connectors
+   if (input.at(0) == '|') {
+       throw runtime_error("syntax error near unexpected token `||`");
+   }
+
+   if (input.at(0) == '&') {
+       throw runtime_error("syntax error near unexpected token `&&`");
+   }
+   
+   if (input.at(0) == ';') {
+       throw runtime_error("syntax error near unexpected token `;`");
+   }
+   
+   while (input.at(input.size() - 1) == '|' || input.at(input.size() - 1) == '&' || input.at(input.size() - 1) == ';') {
+      cout << "> ";
+      string nextInput;
+      getline(cin, nextInput);
+      string nextPiece = trim_copy(nextInput);
+      input = input + nextPiece;
+   }
+
+   // Declare container to hold commands and connectors
 	queue<string> arguments;
 	queue<string> connector;
 	
 	// Store "black boxing" commands here
 	queue<string> blackbox;
-	
+   
    // Do pre-parsing for precedence here
 	size_t j = input.find('(');
 	while (j != string::npos) {
@@ -63,8 +88,7 @@ Base* parse(string input) {
 	}
 	
    // Do pre-parsing for test command here
-	size_t k = input.find('[');
-	
+	size_t k = input.find('[');	
 	while (k != string::npos) {
 		// Initiate tracking variable
 		int t = -1;
@@ -108,8 +132,8 @@ Base* parse(string input) {
         string token = trim_copy(temp);
         arguments.push(token);
         argtest.push_back(token);
-    }
-    
+    } 
+
     // Build connector container
     connectors(input, connector);
     
