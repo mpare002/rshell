@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2016 Michael Pare, Ryan Ulep
+Copyright (c) 2016 Michael Pare, Tommy Shiels, Ryan Ulep
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
