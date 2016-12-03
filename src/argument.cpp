@@ -165,46 +165,34 @@ bool Executable::execute()
 		//first check if second argument is null so we know to return to home directory
 		if(newArgs[1] == NULL)
 		{
-			cout << getenv("OLDPWD") << endl;
-			cout << getenv("PWD") << endl;
 			setenv("OLDPWD", getenv("PWD"), 1); //set old pwd to current 
 			char buff[100];
 			chdir(getenv("HOME"));
 			getcwd(buff, 100);
 			setenv("PWD", buff, 1); //change PWD to new dir
-			cout << getenv("OLDPWD") << endl;
-			cout << getenv("PWD") << endl;
 			return true;
 		}
-		cout << "next" << endl;
 		//next check to see if second argument is a '-' so we know to return to the previous dir
 		string temp(newArgs[1]);
 		if(temp == "-")
 		{
-			cout << getenv("OLDPWD") << endl;
-			cout << getenv("PWD") << endl;
-
 			char buff[100];
 			getcwd(buff, 100);
-			cout << "BUFF:" << buff << endl;
 			setenv("PWD", getenv("OLDPWD"), 1);
 			setenv("OLDPWD", buff, 1);
-			cout << "BUFF:" << buff << endl;
 			chdir(getenv("PWD"));
-
-			cout << getenv("OLDPWD") << endl;
-			cout << getenv("PWD") << endl;
 			return true;
 		}
-		struct stat buffer;
-		stat(newArgs[1], &buffer);
-		if(!(S_ISDIR(buffer.st_mode)))
-		{
-			cout << "-rshell: cd: "<< temp << ": No such file or directory\n";
-			return false;
-		}
+		
 		else //here we change our working directory to the new one
 		{
+			struct stat buffer;
+			stat(newArgs[1], &buffer);
+			if(!(S_IFDIR & buffer.st_mode))
+			{
+				cout << "-rshell: cd: "<< temp << ": No such file or directory\n";
+				return false;
+			}
 			setenv("OLDPWD", getenv("PWD"), 1); //set old pwd to current 
 			char buff[100];
 			string current(getenv("PWD"));
