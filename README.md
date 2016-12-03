@@ -22,6 +22,5 @@ Note this program can take more than one command on a line and can be separated 
 There are no limits to the number of commands which can be chained together, and any combination of operators can be handled.   
 
 ## Known Bugs
-1. The rshell currently does not allow the `cd` command. This will be handled in a future version.
-2. When the `cd` command is used in a command line, the rshell will not run.
-3. The following command structure causes an error: `[some test] connector (a precedence)`.
+1. The following command structure causes an error: `[some test] connector (a precedence)`.
+2. when entering a invalid directory as an argument several times for cd it will interfere with the PWD and OLDPWD variables 
