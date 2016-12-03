@@ -1,0 +1,15 @@
+cd && echo entered home directory
+mkdir test_dir
+cd test_dir && echo entered test_dir
+cd - && pwd
+cd - && pwd
+cd - && pwd
+cd ..
+cd
+rm -r test_dir
+mkdir poop && echo "created poop dir"
+mkdir poop/poop2 && echo "created poop2 in poop dir"
+cd poop/poop2 && echo "cd into poop2"
+cd ../.. && echo went back 2 directorys
+rm -r poop
+exit
