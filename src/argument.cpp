@@ -157,8 +157,61 @@ bool Executable::execute()
 			}
 		}
 	}
+	//here we see if the argument is cd ----------------------------------------------------------------------------------
+	else if(tester == "cd")
+	{
+		
+		//first check if second argument is null so we know to return to home directory
+		if(newArgs[1] == NULL)
+		{
+			setenv("OLDPWD", getenv("PWD"), 1); //set old pwd to current 
+			char buff[100];
+			//char* path = getenv("HOME");
+			chdir(getenv("HOME"));
+			getcwd(buff, 100);
+			setenv("PWD", buff, 1); //change PWD to new dir
+			cout << getenv("OLDPWD") << endl;
+			return true;
+		}
+		//next check to see if second argument is a '-' so we know to return to the previous dir
+		string temp(newArgs[1]);
+		//cout << temp << endl;
+		if(temp == "-")
+		{
+			if(getenv("OLDPWD") == NULL)
+			{
+				cout << "bash: cd: OLDPWD not set\n";
+				return false;
+			}
+			setenv("PWD", getenv("OLDPWD"), 1);
+			chdir(getenv("PWD"));
+		}
+		struct stat buffer;
+		stat(newArgs[1], &buffer);
+		if(!(S_ISDIR(buffer.st_mode)) && temp != "-")
+		{
+			cout << "-rshell: cd: "<< temp << ": No such file or directory\n";
+			return false;
+		}
+		else
+		{
+			setenv("OLDPWD", getenv("PWD"), 1); //set old pwd to current 
+			char buff[100];
+			string current(getenv("PWD"));
+			string tmp = current + temp;
+			const char* newdir = temp.c_str();
+			chdir(getenv(newdir));
+			getcwd(buff, 100);
+			setenv("PWD", buff, 1);
+			cout << getenv("OLDPWD") << endl;
+			
+			return true;
+		}
 	
-	//Here is where we implement the system calls
+
+	}
+	
+	//Here is where we implement the system calls ------------------------------------------------------------------------
     bool result = true;
     int pid_child;
     int status;
