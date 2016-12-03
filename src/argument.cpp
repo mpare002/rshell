@@ -12,6 +12,7 @@
 #include <boost/algorithm/string.hpp>
 #include "parse.h"
 #include <cstddef>
+#include <algorithm>
 
 using namespace std;
 using namespace boost;
@@ -164,47 +165,56 @@ bool Executable::execute()
 		//first check if second argument is null so we know to return to home directory
 		if(newArgs[1] == NULL)
 		{
+			cout << getenv("OLDPWD") << endl;
+			cout << getenv("PWD") << endl;
 			setenv("OLDPWD", getenv("PWD"), 1); //set old pwd to current 
 			char buff[100];
-			//char* path = getenv("HOME");
 			chdir(getenv("HOME"));
 			getcwd(buff, 100);
 			setenv("PWD", buff, 1); //change PWD to new dir
 			cout << getenv("OLDPWD") << endl;
+			cout << getenv("PWD") << endl;
 			return true;
 		}
+		cout << "next" << endl;
 		//next check to see if second argument is a '-' so we know to return to the previous dir
 		string temp(newArgs[1]);
-		//cout << temp << endl;
 		if(temp == "-")
 		{
-			if(getenv("OLDPWD") == NULL)
-			{
-				cout << "bash: cd: OLDPWD not set\n";
-				return false;
-			}
+			cout << getenv("OLDPWD") << endl;
+			cout << getenv("PWD") << endl;
+
+			char buff[100];
+			getcwd(buff, 100);
+			cout << "BUFF:" << buff << endl;
 			setenv("PWD", getenv("OLDPWD"), 1);
+			setenv("OLDPWD", buff, 1);
+			cout << "BUFF:" << buff << endl;
 			chdir(getenv("PWD"));
+
+			cout << getenv("OLDPWD") << endl;
+			cout << getenv("PWD") << endl;
+			return true;
 		}
 		struct stat buffer;
 		stat(newArgs[1], &buffer);
-		if(!(S_ISDIR(buffer.st_mode)) && temp != "-")
+		if(!(S_ISDIR(buffer.st_mode)))
 		{
 			cout << "-rshell: cd: "<< temp << ": No such file or directory\n";
 			return false;
 		}
-		else
+		else //here we change our working directory to the new one
 		{
 			setenv("OLDPWD", getenv("PWD"), 1); //set old pwd to current 
 			char buff[100];
 			string current(getenv("PWD"));
-			string tmp = current + temp;
-			const char* newdir = temp.c_str();
-			chdir(getenv(newdir));
+			string tmp = current + "/" + temp;
+			const char* newdir = tmp.c_str();
+			//cout << tmp << endl;
+			chdir(newdir);
 			getcwd(buff, 100);
 			setenv("PWD", buff, 1);
-			cout << getenv("OLDPWD") << endl;
-			
+
 			return true;
 		}
 	
