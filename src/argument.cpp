@@ -186,20 +186,17 @@ bool Executable::execute()
 		
 		else //here we change our working directory to the new one
 		{
-			struct stat buffer;
-			stat(newArgs[1], &buffer);
-			if(!(S_IFDIR & buffer.st_mode))
-			{
-				cout << "-rshell: cd: "<< temp << ": No such file or directory\n";
-				return false;
-			}
 			setenv("OLDPWD", getenv("PWD"), 1); //set old pwd to current 
 			char buff[100];
 			string current(getenv("PWD"));
 			string tmp = current + "/" + temp;
 			const char* newdir = tmp.c_str();
 			//cout << tmp << endl;
-			chdir(newdir);
+			if(chdir(newdir) != 0)
+			{
+				perror("-rshell: cd");
+				return false;
+			}
 			getcwd(buff, 100);
 			setenv("PWD", buff, 1);
 
